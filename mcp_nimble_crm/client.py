@@ -805,14 +805,17 @@ class NimbleClient:
     def list_deals(
         self,
         *,
-        sort: str = "updated:desc",
+        sort: str = "name:desc",
         limit: int | None = None,
     ) -> dict[str, Any]:
         """List all of the current user's deals.
 
         Args:
             sort: Required by Nimble as "<field>:<order>", e.g.
-                "name:asc" or "updated:desc".
+                "name:asc" or "amount:desc". Note: system timestamp
+                fields like "created"/"updated" and "deal_number" are
+                NOT sortable on this endpoint (Nimble returns 409);
+                stick to standard deal fields like "name" or "amount".
             limit: Max deals to return.
         """
         params: dict[str, Any] = {"sort": sort}
@@ -1090,7 +1093,7 @@ class NimbleClient:
         self,
         pipeline_id: str,
         *,
-        sort: str = "updated:desc",
+        sort: str = "name:desc",
         limit: int | None = None,
         query: str | None = None,
         stage_id: str | None = None,
@@ -1114,7 +1117,7 @@ class NimbleClient:
         self,
         pipeline_id: str,
         *,
-        sort: str = "updated:desc",
+        sort: str = "name:desc",
         limit: int | None = None,
         query: str | None = None,
     ) -> dict[str, Any]:

@@ -808,7 +808,7 @@ def create_task(
 
 
 @mcp.tool()
-def list_deals(sort: str = "updated:desc", limit: int = 30) -> str:
+def list_deals(sort: str = "name:desc", limit: int = 30) -> str:
     """List all of the current user's deals.
 
     Args:
@@ -1187,7 +1187,7 @@ def delete_deal_pipeline(pipeline_id: str) -> str:
 
 @mcp.tool()
 def list_pipeline_deals_by_stage(
-    pipeline_id: str, sort: str = "updated:desc", limit: int = 10,
+    pipeline_id: str, sort: str = "name:desc", limit: int = 10,
 ) -> str:
     """List a pipeline's deals grouped by stage.
 
@@ -1206,7 +1206,7 @@ def list_pipeline_deals_by_stage(
 
 @mcp.tool()
 def list_pipeline_deals_by_owner(
-    pipeline_id: str, sort: str = "updated:desc", limit: int = 10,
+    pipeline_id: str, sort: str = "name:desc", limit: int = 10,
 ) -> str:
     """List a pipeline's deals grouped by owner.
 

@@ -565,7 +565,7 @@ class TestListDeals:
         with patch.object(client.session, "request", return_value=mock_resp) as m:
             client.list_deals()
             assert m.call_args[0] == ("GET", f"{BASE_URL_V2}/deals")
-            assert m.call_args[1]["params"]["sort"] == "updated:desc"
+            assert m.call_args[1]["params"]["sort"] == "name:desc"
 
     def test_list_deals_with_limit(self, client):
         mock_resp = _mock_response({"meta": {}, "resources": []})
