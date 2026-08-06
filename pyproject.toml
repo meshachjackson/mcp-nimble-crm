@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-nimble-crm"
+version = "0.2.0"
+description = "MCP server for the Nimble CRM API — manage contacts, deals, pipelines, notes, tasks, tags, and message drafts."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [
+    { name = "Meshach Jackson", email = "meshach@catalystmarketing.com" },
+]
+keywords = ["mcp", "model-context-protocol", "nimble", "crm", "claude", "ai", "contacts", "deals", "pipelines"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "mcp >= 1.0.0",
+    "requests >= 2.28.0",
+]
+
+[project.scripts]
+mcp-nimble-crm = "mcp_nimble_crm.server:main"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: tests that call the live Nimble API (require NIMBLE_API_KEY)",
+]
+
+[project.urls]
+Homepage = "https://github.com/meshachjackson/mcp-nimble-crm"
+Repository = "https://github.com/meshachjackson/mcp-nimble-crm"
+Issues = "https://github.com/meshachjackson/mcp-nimble-crm/issues"

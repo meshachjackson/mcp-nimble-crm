@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.meshachjackson/mcp-nimble-crm",
+  "description": "MCP server for Nimble CRM — contacts, deals, pipelines, notes, tasks, tags, message drafts",
+  "version": "0.2.0",
+  "repository": {
+    "url": "https://github.com/meshachjackson/mcp-nimble-crm",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registry_name": "pypi",
+      "name": "mcp-nimble-crm",
+      "version": "0.2.0",
+      "runtime": "python",
+      "environment_variables": [
+        {
+          "name": "NIMBLE_API_KEY",
+          "description": "Your Nimble CRM API key (from Settings > API Tokens)",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
