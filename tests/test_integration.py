@@ -258,7 +258,7 @@ class TestTaskCreate:
             task = client.create_task(
                 subject=f"{TEST_PREFIX}: Follow up call",
                 notes="Integration test task",
-                related_to=[contact_id],
+                related_contacts=[contact_id],
                 due_date="2026-12-31T10:00:00",
             )
             assert task.get("id"), f"Task create failed: {task}"
@@ -303,7 +303,7 @@ class TestSearchContacts:
 @skip_no_key
 class TestDeals:
     def test_list_deals(self, client):
-        result = client.list_deals(per_page=5)
+        result = client.list_deals(limit=5)
         # Deals endpoint may return different structure — just verify no error
         assert result is not None
         print(f"  Deals response type: {type(result).__name__}")

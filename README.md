@@ -2,9 +2,11 @@
 
 # mcp-nimble-crm
 
-MCP server for the [Nimble CRM](https://www.nimble.com/) API — manage contacts, deals, deal pipelines, notes, tasks, tags, and message drafts from Claude, Cursor, Zed, or any MCP client.
+MCP server for the [Nimble CRM](https://www.nimble.com/) API — manage contacts, deals, deal pipelines, notes, tasks, tags, fields metadata, and message drafts from Claude, Cursor, Zed, or any MCP client.
 
-This project began as a fork of [cphoskins/nimble-crm-mcp](https://github.com/cphoskins/nimble-crm-mcp) (MIT licensed), extended with deal pipeline management, single-deal lookups, deal tags, deal field metadata, and message drafts — plus ongoing maintenance across multiple machines/environments.
+This project began as a fork of [cphoskins/nimble-crm-mcp](https://github.com/cphoskins/nimble-crm-mcp) (MIT licensed). It has since been rewritten against Nimble's official v1/v2 OpenAPI reference (readthedocs/Redocly spec) to correct and extend coverage: deals and deal pipelines now correctly target the **v2** API (`/api/v2/deals`), with full pipeline/stage/field/group/choice management, deal tags, deal notes, and lead pipeline transitions — plus the full v1 contacts-fields-metadata CRUD surface (tabs, groups, fields, choices) that the upstream project didn't cover. See `NIMBLE_API_REFERENCE.md` for the endpoint-by-endpoint source notes.
+
+**Scope note:** binary file upload/download endpoints (deal files, contact avatar uploads via Azure Blob SDK) are intentionally not implemented — they require a separate multipart/Azure Blob integration outside a JSON REST client's scope.
 
 > **Note on naming:** this is unrelated to `nimble-js-mcp` on npm, which is for [Nimbleway](https://nimbleway.com) (a web-scraping/data API company) — a different "Nimble" entirely.
 
@@ -86,27 +88,48 @@ Add to your Claude Code MCP settings (`~/.claude/settings.json` or project `.cla
 ### Tasks
 - **create_task** — Create a task with subject, notes, due date, and related contacts
 
-### Deals
-- **list_deals** — List deals, with optional filters for pipeline, stage, and owner
-- **get_deal** — Get a single deal by ID
-- **create_deal** — Create a deal with name, amount, stage, probability, etc.
-- **update_deal** — Update deal fields
-- **delete_deal** — Delete a deal
-- **replace_deal_tags** — Replace all tags on a deal (full replace, not additive)
+### Contacts Fields Metadata
+- **list_contact_fields** — List all contact field metadata (tabs, groups, fields, types)
+- **create_contact_field** / **update_contact_field** / **delete_contact_field** — Manage custom contact fields
+- **create_contact_field_group** — Create a fields group
+- **create_contact_field_tab** — Create a fields tab
 
-### Deal Pipelines
-- **list_deal_pipelines** — List all deal pipelines and their stages
-- **create_deal_pipeline** — Create a new pipeline with ordered stages
-- **update_deal_pipeline** — Rename a pipeline or update its stages
-- **delete_deal_pipeline** — Delete a pipeline
+### Contact Pipelines (Leads)
+- **list_contact_pipelines** — List lead/contact pipelines visible to the user
+- **move_lead_to_stage** — Move a lead into a pipeline stage
+- **exit_lead_successful** / **exit_lead_unsuccessful** — Exit a lead as won/lost
+- **undo_lead_transition** — Undo a recent won/lost transition
+
+### Activities & Tasks
+- **list_activities** — List pending or past activities, filterable by contact/deal
+- **create_task** — Create a task with subject, notes, due date, related contacts/deals, and tags
+
+### Deals (v2)
+- **list_deals** — List the current user's deals
+- **get_deal** — Get a single deal by ID
+- **create_deal** — Create a deal (pipeline, stage, fields_values, owner, currency, tags)
+- **update_deal** — Update deal fields, pipeline, stage, owner, or tags
+- **delete_deal** — Delete a deal
+- **get_won_deals_last_month** — Sum/count of deals won in the last month
+
+### Deal Tags & Notes
+- **list_deal_tags** / **add_tags_to_deals** / **rename_deal_tag** / **delete_deal_tag**
+- **create_deal_note** / **update_deal_note** / **delete_deal_note**
+- **list_deal_overdue_activities** — Overdue activities for a deal
+
+### Deal Fields
+- **list_deal_fields** — Standard + per-pipeline deal fields
+- **list_deal_column_catalogue** — Deal column/column-group catalogue
+
+### Deal Pipelines (v2)
+- **list_deal_pipelines** / **get_deal_pipeline** / **create_deal_pipeline** / **update_deal_pipeline** / **delete_deal_pipeline**
+- **list_pipeline_deals_by_stage** / **list_pipeline_deals_by_owner**
+- **archive_deal_pipeline** / **unarchive_deal_pipeline** / **add_pipeline_lost_reason**
+- **create_pipeline_stage** / **update_pipeline_stage** / **archive_pipeline_stage**
 
 ### Messages
-- **list_messages** — List messages
-- **create_message_draft** — Create a draft message linked to contacts and/or recipients
-
-### Metadata
-- **list_contact_fields** — List all contact field metadata (tabs, groups, fields, types)
-- **list_deal_fields** — List all deal field metadata (standard and pipeline fields)
+- **list_message_drafts** — List draft messages
+- **create_message_draft** — Create a draft message linked to recipients
 
 ### Account
 - **get_myself** — Get current authenticated user info
