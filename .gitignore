@@ -12,3 +12,6 @@ venv/
 .mcpregistry_github_token
 .mcpregistry_registry_token
 .pytest_cache/
+
+# Vault-local notes (not part of the public repo)
+VAULT-NOTES.md
