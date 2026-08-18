@@ -12,17 +12,20 @@ This project began as a fork of [cphoskins/nimble-crm-mcp](https://github.com/cp
 
 ## Installation
 
-```bash
-pip install mcp-nimble-crm
-```
-
-Or install from source:
+Install from source:
 
 ```bash
 git clone https://github.com/meshachjackson/mcp-nimble-crm.git
 cd mcp-nimble-crm
 pip install -e .
 ```
+
+Requires Python 3.11 or newer.
+
+> **Not on PyPI yet.** `pip install mcp-nimble-crm` does not work today — the
+> package name is reserved in `pyproject.toml` and `server.json`, but no
+> release has been published. Install from source until then. See
+> [Releasing](#releasing).
 
 ## Configuration
 
@@ -34,20 +37,18 @@ pip install -e .
 
 ### Claude Code
 
-Add to your Claude Code MCP settings (`~/.claude/settings.json` or project `.claude/settings.json`):
+Register the server with the `claude` CLI:
 
-```json
-{
-  "mcpServers": {
-    "nimble-crm": {
-      "command": "mcp-nimble-crm",
-      "env": {
-        "NIMBLE_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
+```bash
+claude mcp add nimble-crm --scope user -e NIMBLE_API_KEY=your-api-key-here -- mcp-nimble-crm
 ```
+
+`--scope user` makes it available in every project; use `--scope project` to
+write a shared `.mcp.json` instead. Verify with `claude mcp get nimble-crm`.
+
+Claude Code stores MCP servers in `~/.claude.json` (user scope) or a project
+`.mcp.json` — **not** in `settings.json`. Prefer the CLI over editing either
+file by hand.
 
 ### Generic MCP Client
 
@@ -73,12 +74,17 @@ Add to your Claude Code MCP settings (`~/.claude/settings.json` or project `.cla
 - **get_contact** — Get a single contact by ID with all fields and tags
 - **create_contact** — Create a person or company contact with name, email, phone, tags
 - **update_contact** — Update contact fields (merge or replace mode)
+- **list_contact_ids** — List contact IDs only (faster than a full listing)
+- **get_contacts_by_ids** — Standard listings for up to 30 explicit IDs
+- **delete_contact** — Delete a single contact, with `regular` or `force` deletion
 - **delete_contacts** — Delete one or more contacts by ID
+- **delete_contacts_by_query** — Bulk-delete contacts matching a query (needs bulk delete permission)
 
 ### Notes
 - **list_notes** — List notes for a specific contact
 - **get_note** — Get a single note by ID
 - **create_note** — Create a note attached to one or more contacts
+- **create_contact_note** — Create a note attached to a single contact
 - **update_note** — Update an existing note
 - **delete_note** — Delete a note
 
