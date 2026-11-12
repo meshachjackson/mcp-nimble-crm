@@ -34,6 +34,18 @@ and every Claude account (web, mobile, Desktop, Code) connects via OAuth,
 each user pasting their own Nimble API key a single time on a setup page.
 See [REMOTE.md](REMOTE.md).
 
+Environment variables the hosted mode reads (names only):
+
+- `NIMBLE_MCP_PUBLIC_URL`: required; the public HTTPS base URL of the deployment, used for the OAuth issuer and setup links.
+- `NIMBLE_MCP_ENCRYPTION_KEY`: required; the Fernet key that encrypts each user's stored Nimble key.
+- `NIMBLE_MCP_DB`: optional; the SQLite file path (defaults to `nimble-remote.db`).
+- `HOST`: optional; the bind address (defaults to `0.0.0.0`).
+- `PORT`: optional; the bind port (defaults to `8000`).
+- `NIMBLE_MCP_REMOTE`: switches on hosted mode; the `mcp-nimble-crm-remote` entrypoint sets it, so you do not set it yourself.
+- `NIMBLE_API_KEY`: single-user stdio mode only; leave it unset in hosted mode (it is only a fallback if no per-user key resolves).
+
+No shared Nimble API key is stored on the server: each user's own key is stored encrypted (Fernet) in the SQLite database, and the encryption key lives only in the deploy environment.
+
 ## Configuration
 
 ### Get your Nimble API Key
