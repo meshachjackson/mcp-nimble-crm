@@ -15,21 +15,64 @@ from .client import NimbleClient
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-mcp = FastMCP(
-    "nimble-crm",
-    instructions=(
-        "Nimble CRM MCP server for managing contacts, deals, deal "
-        "pipelines, notes, tasks, tags, fields metadata, and message "
-        "drafts. Use list/search tools to find records, create/update "
-        "tools to modify them, and note/task tools for activity "
-        "tracking."
-    ),
+_INSTRUCTIONS = (
+    "Nimble CRM MCP server for managing contacts, deals, deal "
+    "pipelines, notes, tasks, tags, fields metadata, and message "
+    "drafts. Use list/search tools to find records, create/update "
+    "tools to modify them, and note/task tools for activity "
+    "tracking."
 )
+
+
+def _build_mcp() -> FastMCP:
+    """Construct the FastMCP instance.
+
+    In the default stdio mode this is a plain, auth-free server keyed by the
+    NIMBLE_API_KEY environment variable. When NIMBLE_MCP_REMOTE is set (by
+    the mcp-nimble-crm-remote entrypoint), the OAuth provider and transport
+    settings are injected here, on the public constructor, so the remote
+    package stays an optional dependency.
+    """
+    kwargs = {}
+    if os.environ.get("NIMBLE_MCP_REMOTE"):
+        from .remote.bootstrap import build_auth_kwargs
+
+        kwargs = build_auth_kwargs()
+    return FastMCP("nimble-crm", instructions=_INSTRUCTIONS, **kwargs)
+
+
+mcp = _build_mcp()
 
 _client: NimbleClient | None = None
 
+# Remote mode installs a resolver returning the authenticated caller's own
+# Nimble key; every tool call then acts as that user. None means single-user
+# stdio mode, which falls through to the environment variable.
+_key_resolver = None
+_MAX_CACHED_CLIENTS = 256
+_clients_by_key: dict[str, NimbleClient] = {}
+
+
+def set_key_resolver(resolver) -> None:
+    global _key_resolver
+    _key_resolver = resolver
+
+
+def _client_for_key(api_key: str) -> NimbleClient:
+    client = _clients_by_key.get(api_key)
+    if client is None:
+        if len(_clients_by_key) >= _MAX_CACHED_CLIENTS:
+            _clients_by_key.clear()
+        client = NimbleClient(api_key=api_key)
+        _clients_by_key[api_key] = client
+    return client
+
 
 def _get_client() -> NimbleClient:
+    if _key_resolver is not None:
+        api_key = _key_resolver()
+        if api_key:
+            return _client_for_key(api_key)
     global _client
     if _client is None:
         _client = NimbleClient(
