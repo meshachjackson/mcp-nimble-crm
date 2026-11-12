@@ -165,6 +165,8 @@ NIMBLE_API_KEY=your-key pytest tests/test_integration.py -v
 NIMBLE_API_KEY=your-key mcp-nimble-crm
 ```
 
+The integration tests in `tests/test_integration.py` are skipped when `NIMBLE_API_KEY` is not set, so `pytest tests/` is safe to run without credentials.
+
 ## Releasing
 
 ```bash
