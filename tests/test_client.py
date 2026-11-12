@@ -28,7 +28,7 @@ def _mock_response(json_data=None, status_code=200):
 @pytest.fixture
 def client():
     """Create a NimbleClient with a fake API key."""
-    return NimbleClient(api_key="test-api-key-123")
+    return NimbleClient(api_key="test-key")
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -47,7 +47,7 @@ class TestInit:
             assert c.api_key == "env-key"
 
     def test_sets_auth_header(self, client):
-        assert client.session.headers["Authorization"] == "Bearer test-api-key-123"
+        assert client.session.headers["Authorization"] == "Bearer test-key"
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -177,7 +177,7 @@ class TestUpdateContact:
         with patch.object(client.session, "request", return_value=mock_resp) as m:
             client.update_contact(
                 "abc123",
-                fields={"email": [{"value": "new@test.com", "modifier": "work"}]},
+                fields={"email": [{"value": "new@example.com", "modifier": "work"}]},
             )
             call_args = m.call_args
             assert call_args[0][0] == "PUT"
@@ -193,7 +193,7 @@ class TestUpdateContact:
         with patch.object(client.session, "request", return_value=mock_resp) as m:
             client.update_contact(
                 "abc123",
-                fields={"email": [{"value": "new@test.com", "modifier": "work"}]},
+                fields={"email": [{"value": "new@example.com", "modifier": "work"}]},
                 replace=True,
             )
             assert m.call_args[1]["params"]["type"] == "1"
@@ -938,10 +938,10 @@ class TestMessages:
     def test_list_message_drafts(self, client):
         mock_resp = _mock_response({"drafts": [], "meta": {}})
         with patch.object(client.session, "request", return_value=mock_resp) as m:
-            client.list_message_drafts(recipients="a@b.com", page=1, per_page=10)
+            client.list_message_drafts(recipients="a@example.com", page=1, per_page=10)
             assert m.call_args[0] == ("GET", f"{BASE_URL_V1}/messages/drafts")
             params = m.call_args[1]["params"]
-            assert params["recipients"] == "a@b.com"
+            assert params["recipients"] == "a@example.com"
             assert params["page"] == 1
 
     def test_create_message_draft(self, client):
