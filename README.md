@@ -27,6 +27,13 @@ Requires Python 3.11 or newer.
 > release has been published. Install from source until then. See
 > [Releasing](#releasing).
 
+## Hosted mode (claude.ai custom connector)
+
+This server also runs as a multi-tenant remote MCP service: deploy it once,
+and every Claude account (web, mobile, Desktop, Code) connects via OAuth,
+each user pasting their own Nimble API key a single time on a setup page.
+See [REMOTE.md](REMOTE.md).
+
 ## Configuration
 
 ### Get your Nimble API Key

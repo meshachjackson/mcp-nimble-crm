@@ -31,9 +31,16 @@ dependencies = [
 dev = [
     "pytest >= 7.0.0",
 ]
+# Hosted multi-tenant deployment (claude.ai custom connector).
+# The mcp floor matches the SDK auth surface this code is written against.
+remote = [
+    "mcp >= 1.29.0, < 2.0.0",
+    "cryptography >= 42.0.0",
+]
 
 [project.scripts]
 mcp-nimble-crm = "mcp_nimble_crm.server:main"
+mcp-nimble-crm-remote = "mcp_nimble_crm.remote.app:main"
 
 [tool.pytest.ini_options]
 markers = [
