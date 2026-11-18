@@ -10,7 +10,7 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
 authors = [
-    { name = "Meshach Jackson", email = "meshach@catalystmarketing.com" },
+    { name = "Meshach Jackson", email = "624763+meshachjackson@users.noreply.github.com" },
 ]
 keywords = ["mcp", "model-context-protocol", "nimble", "crm", "claude", "ai", "contacts", "deals", "pipelines"]
 classifiers = [
